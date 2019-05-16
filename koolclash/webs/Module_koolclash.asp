@@ -165,9 +165,9 @@
             background: #D7D7D7
         }
 
-        #koolclash-acl-default-panel {
+        /*#koolclash-acl-default-panel {
             margin-top: 16px;
-        }
+        }*/
 
     </style>
     <script>
@@ -310,7 +310,7 @@
                     <div id="koolclash-dashboard-info"></div>
 
                     <div class="koolclash-btn-container">
-                        <a href="/koolclash/index.html" class="btn btn-primary" target="_blank">访问 Clash 面板</a>
+                        <button class="btn btn-primary" onclick="window.open(`http:\/\/${window.location.hostname.replace('%3', '')}:6170/ui/`, 'newwindow', '')">访问 Clash 面板</button>
                         <button type="button" id="koolclash-btn-submit-control" onclick="KoolClash.submitExternalControl();" class="btn">提交外部控制设置</button>
                     </div>
                 </div>
@@ -348,28 +348,6 @@
                     <div id="koolclash-firewall-ipset"></div>
                     <div class="koolclash-btn-container">
                         <button type="button" id="koolclash-btn-submit-white-ip" onclick="KoolClash.acl.submitWhiteIP();" class="btn btn-primary">提交</button>
-                    </div>
-                </div>
-            </div>
-            <div class="box">
-                <!--<div class="heading">访问控制主机</div>
-                <div class="content">
-                    <div class="tabContent">
-                        <table class="line-table" cellspacing="1" id="koolclash-acl-panel"></table>
-                    </div>
-                </div>-->
-                <div class="heading">默认主机设置</div>
-                <div class="content">
-                    <!--<p style="color: red; font-weight: 600">功能开发中，尚不可用！</p>-->
-                    <p>
-                        除了设置的访问控制主机，其它剩余主机都将走此处设定的模式和端口。
-                        <br>
-                        常用端口包括 21 22 80 8080 8880 2052 2082 2086 2095 443 2053 2083 2087 2096 8443
-                    </p>
-                    <div id="koolclash-acl-default-panel" class="section"></div>
-                    <br>
-                    <div class="koolclash-btn-container">
-                        <button type="button" id="koolclash-btn-submit-default" onclick="KoolClash.acl.submitDefault();" class="btn btn-primary">提交</button>
                     </div>
                 </div>
             </div>
@@ -575,48 +553,8 @@
                         value: Base64.decode(window.dbus.koolclash_firewall_whiteip_base64 || '') || '',
                         style: 'width: 80%; height: 150px;'
                     },
-                    {
-                        title: '<b>Chromecast 开关</b><br><br><p style="color: #999">强烈建议暂时不要使用！</p>',
-                        name: 'koolclash-chromecast-switch',
-                        prefix: '<br>',
-                        type: 'checkbox',
-                        style: `margin-top:16px;`
-                    },
                 ]);
 
-                $('#koolclash-acl-default-panel').forms([
-                    {
-                        title: '默认模式',
-                        name: 'koolclash-acl-default-mode',
-                        type: 'select',
-                        //style: select_style,
-                        options: [
-                            ['0', '不通过 Clash'],
-                            ['1', '通过 Clash']
-                        ],
-                        value: window.dbus.koolclash_firewall_default_mode || '1'
-                    },
-                    {
-                        title: '目标端口',
-                        name: 'koolclash-acl-default-port',
-                        type: 'select',
-                        //style: select_style,
-                        options: [
-                            ['80443', '80,443'],
-                            ['1', '常用端口'],
-                            ['all', '全部端口'],
-                            ['0', '自定义端口']
-                        ],
-                        value: window.dbus.koolclash_firewall_default_port_mode || 'all',
-                    },
-                    {
-                        title: '&nbsp;',
-                        name: 'koolclash-acl-default-port-user',
-                        type: 'textarea',
-                        value: Base64.decode(window.dbus.koolclash_firewall_default_port_user || '') || '',
-                        style: 'width: 100%; height: 50px;',
-                    },
-                ]);
                 $('#koolclash-watchdog-panel').forms([
                     {
                         title: 'Clash 看门狗开关',
@@ -638,13 +576,11 @@
                     },
                 ]);
 
-                if (document.getElementById('_koolclash-acl-default-port').value === '0') {
+                /*if (document.getElementById('_koolclash-acl-default-port').value === '0') {
                     $('#_koolclash-acl-default-port-user').show();
                 } else {
                     $('#_koolclash-acl-default-port-user').hide();
-                }
-
-                document.getElementById('_koolclash-chromecast-switch').checked = (window.dbus.koolclash_firewall_chromecast === 'true') ? true : false;
+                }*/
 
                 $('.koolclash-nav-log').on('click', KoolClash.getLog);
             },
@@ -695,7 +631,7 @@ dns:
   enable: true
   ipv6: false
   listen: 0.0.0.0:53
-  enhanced-mode: redir-host
+  enhanced-mode: fake-ip
   nameserver:
     - 119.28.28.28
     - 119.29.29.29
@@ -1327,7 +1263,6 @@ KoolClash 版本：${window.dbus.koolclash_version}
 Clash 核心版本：${data.clash_version}
 KoolClash 当前状态：${(window.dbus.koolclash_enable === '1') ? `Clash 进程正在运行` : `Clash 进程未在运行`}
 用户指定 Clash 外部控制 Host：${(window.dbus.koolclash_api_host) ? koolclash_api_host : `未改动`}
-Chromecast（劫持 DNS）是否启用：${window.dbus.koolclash_firewall_chromecast}
 IP 数据库是否存在：${data.ipdb_exists}
 -------------------------- Clash 进程信息 --------------------------
 ${Base64.decode(data.clash_process)}
@@ -1358,6 +1293,12 @@ ${Base64.decode(Base64.decode(data.iptables_mangle_clash))}
  * iptables nat 中 koolclash 链
 ${Base64.decode(Base64.decode(data.iptables_nat_clash))}
 
+* iptables mangle 中 koolclash_dns 链
+${Base64.decode(Base64.decode(data.iptables_mangle_clash_dns))}
+
+ * iptables nat 中 koolclash_dns 链
+${Base64.decode(Base64.decode(data.iptables_nat_clash_dns))}
+
  * iptables nat 中 Chromecast 相关条目
 ${Base64.decode(data.chromecast_nu)}
 ---------------------- ipset 白名单 IP 列表 ------------------------
@@ -1371,14 +1312,13 @@ ${Base64.decode(data.firewall_white_ip)}
                 submitWhiteIP: () => {
                     KoolClash.disableAllButton();
                     let data = Base64.encode(document.getElementById('_koolclash_firewall_white_ipset').value);
-                    let chromecast = document.getElementById('_koolclash-chromecast-switch').checked;
 
                     document.getElementById('koolclash-btn-submit-white-ip').innerHTML = `正在提交`;
                     let id = parseInt(Math.random() * 100000000),
                         postData = JSON.stringify({
                             id,
                             "method": "koolclash_firewall.sh",
-                            "params": ['white', `${chromecast}`, `${data}`],
+                            "params": ['white', `${data}`],
                             "fields": ""
                         });
 
@@ -1400,40 +1340,6 @@ ${Base64.decode(data.firewall_white_ip)}
                             setTimeout(() => {
                                 KoolClash.enableAllButton();
                                 document.getElementById('koolclash-btn-submit-white-ip').innerHTML = '提交';
-                            }, 2500)
-                        }
-                    });
-                },
-                submitDefault: () => {
-                    KoolClash.disableAllButton();
-                    document.getElementById('koolclash-btn-submit-default').innerHTML = `正在提交`;
-
-                    let id = parseInt(Math.random() * 100000000),
-                        postData = JSON.stringify({
-                            id,
-                            "method": "koolclash_firewall.sh",
-                            "params": ['default', `${document.getElementById('_koolclash-acl-default-mode').value}`, `${document.getElementById('_koolclash-acl-default-port').value}`, `${Base64.encode(document.getElementById('_koolclash-acl-default-port-user').value)}`],
-                            "fields": ""
-                        });
-
-                    $.ajax({
-                        type: "POST",
-                        cache: false,
-                        url: "/_api/",
-                        data: postData,
-                        dataType: "json",
-                        success: (resp) => {
-                            document.getElementById('koolclash-btn-submit-default').innerHTML = `提交成功，下次启动 Clash 时生效！`;
-                            setTimeout(() => {
-                                KoolClash.enableAllButton();
-                                document.getElementById('koolclash-btn-submit-default').innerHTML = '提交';
-                            }, 2500)
-                        },
-                        error: () => {
-                            document.getElementById('koolclash-btn-submit-default').innerHTML = `提交失败，请重试！`;
-                            setTimeout(() => {
-                                KoolClash.enableAllButton();
-                                document.getElementById('koolclash-btn-submit-default').innerHTML = '提交';
                             }, 2500)
                         }
                     });
@@ -1475,6 +1381,7 @@ ${Base64.decode(data.firewall_white_ip)}
             },
             load: (cb) => {
                 window.dbus = {}
+                document.title = 'KoolClash - Clash for Koolshare OpenWrt/LEDE';
 
                 fetch(`/_api/koolclash`, { method: 'GET' })
                     .then((resp) => Promise.all([resp.ok, resp.status, resp.json(), resp.headers]))
@@ -1515,13 +1422,13 @@ ${Base64.decode(data.firewall_white_ip)}
                         $('#koolclash-btn-save-dns-config').hide();
                     }
                 }
-            } else if (r.getAttribute('id') === '_koolclash-acl-default-port') {
+            }/* else if (r.getAttribute('id') === '_koolclash-acl-default-port') {
                 if (document.getElementById('_koolclash-acl-default-port').value === '0') {
                     $('#_koolclash-acl-default-port-user').show();
                 } else {
                     $('#_koolclash-acl-default-port-user').hide();
                 }
-            }
+            }*/
         }
     </script>
     <script>

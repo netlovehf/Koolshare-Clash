@@ -23,9 +23,10 @@
 ![](/img/ui-3.png)
 
 - IP/CIDR 白名单：不通过 Clash 的 IP/CIDR 外网地址，一行一个
-- Chromecast 开关：是否劫持局域网内的 DNS 请求到 Clash
 
-- 默认主机设置：Clash 全局代理控制
+- ~~默认主机设置：Clash 全局代理控制~~
+
+?> 在 `0.17.0-beta` 及其之后版本的 KoolClash 去除了「默认主机设置」功能
 
 ## 附加功能
 

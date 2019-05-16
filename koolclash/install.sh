@@ -46,7 +46,7 @@ if [ -n "$(pidof clash)" ]; then
     echo_date 'KoolClash:【更新 KoolClash 过程中可能会出现「软件中心异常」的提示，是正常现象！】'
     echo_date 'KoolClash:【请不要刷新或关闭页面，务必等待安装完成、页面自动跳转！】'
     sleep 4
-    sh $KSROOT/scripts/koolclash_control.sh stop
+    sh $KSROOT/scripts/koolclash_control.sh stop_for_install
     sleep 1
     echo_date "KoolClash: Clash 已经停止，继续更新/安装..."
 fi
@@ -80,7 +80,7 @@ cp /tmp/koolclash/uninstall.sh $KSROOT/scripts/uninstall_koolclash.sh
 
 if [ ! -f $KSROOT/koolclash/config/Country.mmdb ]; then
     cp -rf /tmp/koolclash/koolclash/config/Country.mmdb $KSROOT/koolclash/config/Country.mmdb
-    dbus set koolclash_ipdb_version=20190507
+    dbus set koolclash_ipdb_version=20190514
 fi
 
 # 删除 Luci 缓存
@@ -110,9 +110,9 @@ dbus set softcenter_module_koolclash_title=koolclash
 dbus set softcenter_module_koolclash_version=$local_version
 
 # 防火墙默认模式
-[ -z $koolclash_firewall_default_mode ] && dbus set koolclash_firewall_default_mode=1
+#[ -z $koolclash_firewall_default_mode ] && dbus set koolclash_firewall_default_mode=1
 # 防火墙默认端口模式
-[ -z $koolclash_firewall_default_port_mode ] && dbus set koolclash_firewall_default_port_mode=all
+#[ -z $koolclash_firewall_default_port_mode ] && dbus set koolclash_firewall_default_port_mode=all
 # 看门狗默认禁用
 [ -z $koolclash_watchdog_enable ] && dbus set koolclash_watchdog_enable=0
 
